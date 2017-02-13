@@ -33,6 +33,7 @@ app.get('/products/1', function(req, res) {
 	});
 });
 
+// STORED PROCEDURE FIX
 app.get('/products/2', function(req, res) {
 	var id = req.query.id;
 	
