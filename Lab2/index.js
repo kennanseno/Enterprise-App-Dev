@@ -33,13 +33,13 @@ app.get('/purchases', function(req, res) {
 });
 
 app.get('/products/:id', function(req, res) {
-	var data = {
-	        id: req.params.id
-	}
-
-	db.products.find(data, function(err, result) {
-	        res.send(result);
-	})
+	var id = req.params.id;
+	
+	console.log("Before:", id);
+	db.run("select * from products where id = " + id, function(err, docs){
+		console.log("After:", docs);
+		res.send(docs);
+	});
 });
 
 app.get('/users', function (req, res) {
