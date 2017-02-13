@@ -32,3 +32,12 @@ app.get('/products/1', function(req, res) {
 		res.send(docs);
 	});
 });
+
+app.get('/products/2', function(req, res) {
+	var id = req.query.id;
+	
+	db.run('select get_product($1)', [id], function(err, docs){
+		res.send(docs);
+	});
+});
+
