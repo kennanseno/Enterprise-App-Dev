@@ -217,6 +217,9 @@ app.post('/participant/update', function(req, res) {
   });
 });
 
+
+//  MODELS ************
+
 var Judge = sequelize.define('Judge', {
     id: {
         type: Sequelize.INTEGER,
@@ -260,13 +263,7 @@ var Participant = sequelize.define('Participant', {
     },
     type: {
         type: Sequelize.STRING,
-        // validate: {
-        //     function() {
-        //     if(this.type != 'claimant' || this.type != 'respondent') {
-        //         throw new Error('Require type to be either a claimant or respondent')
-        //     }
-        // }
-        // }
+        values: ['claimant', 'respondent']
     }
 }, {
     tableName: 'participant'
@@ -277,7 +274,7 @@ var Case = sequelize.define('Case', {
         type: Sequelize.DATE
     },
     duration: {
-        type: Sequelize.TIME
+        type: Sequelize.INTEGER
     },
     result: {
         type: Sequelize.BOOLEAN
@@ -286,13 +283,60 @@ var Case = sequelize.define('Case', {
     tableName: 'case'
 });
 
-Judge.hasMany(Case, { foreignKey: 'judge_id', primaryKey: true});
-Participant.hasMany(Case, { foreignKey: 'claimant_id', primaryKey: true });
-Participant.hasMany(Case, { foreignKey: 'responsendent_id', primaryKey: true});
-Courtroom.hasMany(Case, {foreignKey: 'courtroom_id', primaryKey: true});
+Case.belongsTo(Judge, { foreignKey: 'judge_id', primaryKey: true});
+Case.belongsTo(Participant, { foreignKey: 'claimant_id', primaryKey: true });
+Case.belongsTo(Participant, { foreignKey: 'respondent_id', primaryKey: true});
+Case.belongsTo(Courtroom, {foreignKey: 'courtroom_id', primaryKey: true});
 
-// sequelize.drop();
-sequelize.sync();
+//TEST DATA *********
+
+Judge.sync().then(function () {
+  return Judge.create({
+    id: 1234,
+    name: 'Hancock',
+    room: 1,
+    ext: 'ext1'
+  });
+});
+
+Courtroom.sync().then(function () {
+  return Courtroom.create({
+    id: 123,
+    number: 22
+  });
+});
+
+Participant.sync().then(function () {
+  return Participant.create({
+    id: 12345,
+    name: 'Clarke',
+    address: '25 Milsltead',
+    type: 'claimant'
+  });
+});
+
+Participant.sync().then(function () {
+  return Participant.create({
+    id: 12346,
+    name: 'John',
+    address: '24 Millstead',
+    type: 'respondent'
+  });
+});
+
+Case.sync().then(function () {
+    return Case.create({
+    id: 1,
+    judge_id: 1234,
+    courtroom_id: 123,
+    claimant_id: 12345,
+    respondent_id: 12346,
+    start_date: 211017,
+    duration: 100,
+    result: true
+    });
+});
+
 
 
 

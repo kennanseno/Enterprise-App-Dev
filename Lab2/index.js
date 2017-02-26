@@ -16,7 +16,7 @@ app.listen(3000, function() {
     console.log('Application listening on Port 3000');
 });
 
-app.get('/products/hack/', function(req, res) {
+app.get('/products/hack', function(req, res) {
 	var id = req.query.id;
 	
 	db.run('select * from products where id = ' + id, function(err, docs){
