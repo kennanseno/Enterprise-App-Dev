@@ -1,26 +1,16 @@
 {
-  "name": "lab2-sequelize",
-  "version": "1.0.0",
-  "description": "Ent App Dev Lab 2",
-  "main": "index.js",
+  "name": "lab-3",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "nodemon server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kennanseno/Enterprise-App-Dev.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/kennanseno/Enterprise-App-Dev/issues"
-  },
-  "homepage": "https://github.com/kennanseno/Enterprise-App-Dev#readme",
   "dependencies": {
-    "body-parser": "^1.16.0",
-    "express": "^4.14.1",
-    "pg": "^6.1.2",
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "jsonwebtoken": "^5.7.0",
+    "mongoose": "^4.4.5",
+    "morgan": "^1.7.0",
+    "pg": "^6.1.4",
     "pg-hstore": "^2.3.2",
     "sequelize": "^3.30.2"
   }
