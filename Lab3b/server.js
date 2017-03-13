@@ -3,6 +3,7 @@ var app         = express();
 var bodyParser  = require('body-parser');
 var morgan      = require('morgan');
 var Sequelize   = require('sequelize');
+var bcrypt 		= require('bcrypt');
 
 var jwt    = require('jsonwebtoken');
 var config = require('./config');
@@ -52,17 +53,30 @@ var User = sequelize.define('User', {
 	tableName: 'users'
 });
 
-app.get('/setup', function(req, res) {
-	//create test account
-	User.sync().then(function() {
-		return User.create({
-			username: 'kennanseno',
-			password: 'password'
-		}).then(function(result) {
-			console.log('Test user successfully created!');
-			res.send({success: true});
-		});
-	})	
+// =================================================================
+// SETUP ACCOUNT ===================================================
+// =================================================================
+app.post('/setup', function(req, res) {
+	var saltRounds = 10;
+
+
+	bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
+
+		if(err) {
+			return res.status(401).send('Error while authenticating login information!');
+		}
+
+		//create test account
+		User.sync().then(function() {
+			return User.create({
+				username: req.body.username,
+				password: hash
+			}).then(function(result) {
+				console.log('Test user successfully created!');
+				res.send({success: true});
+			});
+		})	
+	});
 });
 
 // ---------------------------------------------------------
@@ -79,23 +93,29 @@ apiRoutes.post('/authenticate', function(req, res) {
 		if (!user) {
 			res.status(401).send({ success: false, message: 'Authentication failed. User not found.' });
 		} else if (user) {
+
 			// check if password matches
-			if (user.password != req.body.password) {
-				res.status(401).send({ success: false, message: 'Authentication failed. Wrong password.' });
-			} else {
-				// if user is found and password is right
-				// create a token
-				var token = jwt.sign({username: user.username}, app.get('superSecret'), {
-					expiresIn: 86400 // expires in 24 hours
-				});
+			bcrypt.compare(req.body.password, user.password, function(err, res) {
+				if(err) {
+					return res.status(401).send('Error while authenticating login information!');
+				}
 
-				res.send({
-					success: true,
-					message: 'Enjoy your token!',
-					token: token
-				});
-			}		
+				if(res) {
+					// if user is found and password is right
+					// create a token
+					var token = jwt.sign({username: user.username}, app.get('superSecret'), {
+						expiresIn: 86400 // expires in 24 hours
+					});
 
+					return res.send({
+						success: true,
+						message: 'Enjoy your token!',
+						token: token
+					});
+				} else {
+					res.status(401).send({ success: false, message: 'Authentication failed. Wrong password.' });
+				}
+			});
 		}
 	});
 });
