@@ -58,8 +58,7 @@ var User = sequelize.define('User', {
 // =================================================================
 app.post('/setup', function(req, res) {
 	var saltRounds = 10;
-
-
+	
 	bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
 
 		if(err) {
@@ -91,16 +90,16 @@ apiRoutes.post('/authenticate', function(req, res) {
 		}
 	}).then(function(user) {
 		if (!user) {
-			res.status(401).send({ success: false, message: 'Authentication failed. User not found.' });
+			return res.status(401).send({ success: false, message: 'Authentication failed. User not found.' });
 		} else if (user) {
 
 			// check if password matches
-			bcrypt.compare(req.body.password, user.password, function(err, res) {
+			bcrypt.compare(req.body.password, user.password, function(err, result) {
 				if(err) {
 					return res.status(401).send('Error while authenticating login information!');
 				}
 
-				if(res) {
+				if(result) {
 					// if user is found and password is right
 					// create a token
 					var token = jwt.sign({username: user.username}, app.get('superSecret'), {
