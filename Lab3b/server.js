@@ -48,7 +48,15 @@ var User = sequelize.define('User', {
 	},
 	password: {
 		type: Sequelize.STRING
-	} 
+	},
+	publicKey: {
+		type: Sequelize.STRING,
+		field: 'public_key'
+	},
+	privateKey: {
+		type: Sequelize.STRING,
+		field: 'private_key'
+	}
 }, {
 	tableName: 'users'
 });
