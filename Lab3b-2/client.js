@@ -28,6 +28,7 @@ app.get('/sendPost', function(req, res) {
     var data = {
         username: 'kennanseno',
         password: 'xavier123',
+        // CHANGE TO EXISTING VALID TOKEN
         token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Imtlbm5uYW5zZW5vIiwiaWF0IjoxNDkwMTAzNDc0LCJleHAiOjE0OTAxODk4NzR9.f5xa3GmiExvVmU7T6s66jdtRy15FoEa0Z5RvILVTH7U'
     };
 

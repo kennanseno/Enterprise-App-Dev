@@ -131,6 +131,7 @@ apiRoutes.use(function(req, res, next) {
 				//generate hmacsha1 based on provided date
 				var computedSignature = hmacsha1Generate.generateSignature(app.get('superSecret'), data);
 
+				//check if signature is different
 				if(requestSignature == computedSignature) {
 					req.decoded = decoded;	
 					next();
